@@ -13,35 +13,35 @@ entity top is
 end top;
 
 architecture behavior of top is
-	--signal count: std_logic_vector(24 downto 0) := "000000000000000000000000";
-	signal count: unsigned := "0";	
+	signal count: std_logic_vector(24 downto 0) := "0000000000000000000000000";
+	--signal count: unsigned := "0";	
 	signal rledout: std_logic_vector(2 downto 0) := "111";
 	signal shift_cnt: std_logic_vector(1 downto 0) := "00";
 	constant time: integer := 24000000;
 begin
 
-blink_process: process(clk, rst)
+blink_process: process(clk)
 begin
 
 	if (rising_edge(clk)) then
 
-		if rst = '1' then
-			count <= "0";
-			rledout <= "111";
+		if rst = '0' then
+			count <= "0000000000000000000000000";
+			rledout <= "110";
 			shift_cnt <= "00";
 		end if;
 
-		if count = 24000000 then
-			count <= "0";
-			if shift_cnt = "10" then
-				rledout <= "001";
+		if count = "0011111111111111111111111" then
+			count <= "0000000000000000000000000";
+			if shift_cnt = "01" then
+				rledout <= "110"; --red is on
 				shift_cnt <= "00";
 			else
-				rledout <= rledout(1 downto 0) & "0";
+				rledout <= "101"; --blue is on
 				shift_cnt <= std_logic_vector( unsigned(shift_cnt) + 1 );
 			end if;
 		else
-			count <= count + 1;
+			count <= std_logic_vector( unsigned(count) + 1 );
 		end if;
 
 		
